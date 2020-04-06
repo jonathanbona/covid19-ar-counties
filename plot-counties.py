@@ -50,7 +50,7 @@ def gen_jhu_html():
 2019 county population estimates via <a href="https://www.census.gov/data/tables/time-series/demo/popest/2010s-counties-total.html">census.gov</a></h3><br>""" % (dates[-1])
 
 def gen_image_html(cname):
-    return '<div style="content" name="%s"><hr>%s (2019 est population: %s)<br><img src="./arcounties/images/%s.png"/></div>' % (cname.replace(' ', '_'), cname, countypops[cname], cname)
+    return '<div style="content" id="%s"><hr>%s (2019 est population: %s)<br><img src="./arcounties/images/%s.png"/></div>' % (cname.replace(' ', '_'), cname, countypops[cname], cname)
 
 
 def write_index(counties):
