@@ -31,6 +31,7 @@ def plotcounty(cname):
     plt.ylim(0, m)
     plt.subplots_adjust(hspace=0, bottom=0.3)
     plt.plot(y_pos, counts)
+    plt.title(cname)
     #plt.bar(y_pos, counts, align='center', alpha=0.5)
     plt.xticks(y_pos, plotdates, rotation=70)
     plt.savefig('./arcounties/images/%s.png'  % (cname))
