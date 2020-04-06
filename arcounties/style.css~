@@ -1,0 +1,66 @@
+body{
+    font-family: Verdana, Geneva, sans-serif;
+}
+main {
+  max-width: 70rem;
+  padding: 1.5rem;
+  margin: auto;
+}
+footer {
+  margin-top: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.image{
+  width: 200px;
+  height: 200px;
+  margin-left: 20px;
+  margin-top: 20px;  
+  border-radius: 50%;
+  background-image: url("path/to/image");
+  background-position: center center;
+  /* as mentioned by Vad: */
+  background-size: cover;
+  display: inline;
+  float: left;
+
+}
+.info{
+    width: 600px;
+/*  height: 200px;*/
+  margin-left: 280px;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 1.2em;
+
+}
+.social{
+    margin-top: 50px;
+    width: 200px;
+    font-family: Verdana, Geneva, sans-serif;
+
+}
+
+.publications{
+    border-radius: 5px;
+/*    border-style: groove; */
+    background: #f2f9ff; 
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    margin-right: 40px;
+    margin-left: 40px;
+    max-width: 1000px;
+    list-style-type: none;
+    text-align: justify;
+    text-justify: inter-word;
+    font-family: Verdana, Geneva, sans-serif;
+
+
+}
+.publications li{
+/*    background: white; */
+    margin: 15px 0;
+    margin-left: 3%;
+    margin-right: 3%;
+    list-style-type :circle;
+}
