@@ -24,6 +24,23 @@ firstdate = next(i for (i, c) in enumerate(list(statedata[dates].sum())) if c > 
 # start plotting a couple of days before that
 plotdates = dates[firstdate-2:]
 
+
+def plotstate():
+    y_pos = np.arange(len(plotdates))
+    counts = list(statedata[plotdates].sum())
+    m = max(counts)
+    m = round(m*1.1)
+    plt.ylim(0, m)
+    plt.subplots_adjust(hspace=0, bottom=0.3)
+    plt.plot(y_pos, counts)
+    plt.title("State of Arkansas")
+    #plt.bar(y_pos, counts, align='center', alpha=0.5)
+    plt.xticks(y_pos, plotdates, rotation=70)
+    plt.savefig('./arcounties/images/AR.png')
+    plt.clf()
+    
+
+
 def plotcounty(cname):
     y_pos = np.arange(len(plotdates))
     counts = list(statedata[statedata['Admin2'] == cname][plotdates].squeeze())
@@ -60,6 +77,7 @@ def write_index(counties):
         f.write('<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>')
         f.write('<h3>Alphabetical order | <a href="./index-by-cases.html"> Order by # cases</a> | <a href="./index-by-pop.html"> Order by county population</a></h3>')
         f.write(gen_jhu_html())
+        f.write('<img src="./arcounties/images/AR.png"/>')
         for cname in counties:
             f.write(gen_image_html(cname))
 #            f.write('<div style="content"><hr>%s (2019 est population: %s)<br><img src="./images/%s.png"/></div>' % (cname, countypops[cname], cname))            
@@ -68,6 +86,7 @@ def write_index(counties):
         f.write('<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>')
         f.write('<h3><a href="./index.html">Alphabetical order</a> | Order by # cases | <a href="./index-by-pop.html"> Order by county population</a></h3>')
         f.write(gen_jhu_html())
+        f.write('<img src="./arcounties/images/AR.png"/>')
         
         #TODO much cleaner way to do this in pandas 
         for cname in [c for (c, x) in sorted([(county, count) for (i, county, count) in statedata[['Admin2', '4/5/20']].itertuples()], key = lambda x : x[1], reverse=True)]:
@@ -78,6 +97,7 @@ def write_index(counties):
         f.write('<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>')
         f.write('<h3><a href="./index.html">Alphabetical order</a> | <a href="./index-by-cases.html"> Order by # cases</a> | Order by county population')
         f.write(gen_jhu_html())
+        f.write('<img src="./arcounties/images/AR.png"/>')
 
         #TODO much cleaner way to do this in pandas
         for cname in [c for (c,x) in sorted([(name, int(count.replace(',',''))) for (name, count) in countypops.items()], key = lambda x : x[1], reverse = True)]:
