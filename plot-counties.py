@@ -28,18 +28,41 @@ plotdates = dates[firstdate-2:]
 def plotstate():
     y_pos = np.arange(len(plotdates))
     counts = list(statedata[plotdates].sum())
+    deltas = [max(x - y, 0) for (x, y)  in zip(counts, [0]+counts[:-1])]
     m = max(counts)
     m = round(m*1.1)
     plt.ylim(0, m)
     plt.subplots_adjust(hspace=0, bottom=0.3)
     plt.plot(y_pos, counts)
-    plt.title("State of Arkansas")
+#    plt.bar(y_pos, deltas)
+    plt.title("State of Arkansas total")
     #plt.bar(y_pos, counts, align='center', alpha=0.5)
     plt.xticks(y_pos, plotdates, rotation=70)
     plt.savefig('./arcounties/images/AR.png')
     plt.clf()
+def plotstate_deltas():
+    y_pos = np.arange(len(plotdates))
+    counts = list(statedata[plotdates].sum())
+    deltas = [max(x - y, 0) for (x, y)  in zip(counts, [0]+counts[:-1])]
+    m = max(counts)
+    m = round(m*1.1)
+    plt.ylim(0, round(max(deltas)*1.1))
+    plt.subplots_adjust(hspace=0, bottom=0.3)
+#    plt.plot(y_pos, counts)
+    plt.bar(y_pos, deltas)
+    plt.title("State of Arkansas total")
+    #plt.bar(y_pos, counts, align='center', alpha=0.5)
+    plt.xticks(y_pos, plotdates, rotation=70)
+    plt.savefig('./arcounties/images/AR-deltas.png')
+    plt.clf()
     
+all_deltas = {cname : get_deltas(cname) for cname in statedata['Admin2']}
+max_delta = max([max(x) for x  in all_deltas.values()])
 
+def get_deltas(cname):
+    counts = list(statedata[statedata['Admin2'] == cname][plotdates].squeeze())
+    return [max(x - y, 0) for (x, y)  in zip(counts, [0]+counts[:-1])]
+    
 
 def plotcounty(cname):
     y_pos = np.arange(len(plotdates))
@@ -49,15 +72,29 @@ def plotcounty(cname):
     plt.ylim(0, m)
     plt.subplots_adjust(hspace=0, bottom=0.3)
     plt.plot(y_pos, counts)
-    plt.title(cname)
+    plt.title("%s county total" % (cname))
     #plt.bar(y_pos, counts, align='center', alpha=0.5)
     plt.xticks(y_pos, plotdates, rotation=70)
     plt.savefig('./arcounties/images/%s.png'  % (cname))
     plt.clf()
 
+def plotcounty2(cname):
+    y_pos = np.arange(len(plotdates))
+    counts = list(statedata[statedata['Admin2'] == cname][plotdates].squeeze())
+    deltas = get_deltas(cname)
+    plt.ylim(0, round(max_delta*1.1))
+    plt.subplots_adjust(hspace=0, bottom=0.3)
+    plt.bar(y_pos, deltas)
+    plt.title("%s county daily change" % (cname))
+    plt.xticks(y_pos, plotdates, rotation=70)
+    plt.savefig('./arcounties/images/%s-deltas.png'  % (cname))
+    plt.clf()
+
+    
 def plotall():
     for c in list(statedata['Admin2']):
         plotcounty(c)
+        plotcounty2(c)
 
 
 def gen_jhu_html():
@@ -69,8 +106,15 @@ def gen_jhu_html():
 2019 county population estimates via <a href="https://www.census.gov/data/tables/time-series/demo/popest/2010s-counties-total.html">census.gov</a></h3><br>""" % (dates[-1])
 
 def gen_image_html(cname):
-    return '<div style="content" id="%s"><hr>%s (2019 est population: %s)<br><img src="./arcounties/images/%s.png"/></div>' % (cname.replace(' ', '_'), cname, countypops[cname], cname)
+    return """<div style="content" id="%s">
+              <hr>
+              %s (2019 est population: %s)
+              <br>
+              <img src="./arcounties/images/%s.png"/>
+              <img src="./arcounties/images/%s-deltas.png"/>
+              </div>""" % (cname.replace(' ', '_'), cname, countypops[cname], cname, cname)
 
+    
 
 def write_index(counties):
     with open('./index.html', 'w') as f:
@@ -78,28 +122,28 @@ def write_index(counties):
         f.write('<h3>Alphabetical order | <a href="./index-by-cases.html"> Order by # cases</a> | <a href="./index-by-pop.html"> Order by county population</a></h3>')
         f.write(gen_jhu_html())
         f.write('<img src="./arcounties/images/AR.png"/>')
+        f.write('<img src="./arcounties/images/AR-deltas.png"/>')        
         for cname in counties:
             f.write(gen_image_html(cname))
-#            f.write('<div style="content"><hr>%s (2019 est population: %s)<br><img src="./images/%s.png"/></div>' % (cname, countypops[cname], cname))            
             
     with open('./index-by-cases.html', 'w') as f:
         f.write('<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>')
         f.write('<h3><a href="./index.html">Alphabetical order</a> | Order by # cases | <a href="./index-by-pop.html"> Order by county population</a></h3>')
         f.write(gen_jhu_html())
         f.write('<img src="./arcounties/images/AR.png"/>')
+        f.write('<img src="./arcounties/images/AR-deltas.png"/>')                
         
         #TODO much cleaner way to do this in pandas 
         for cname in [c for (c, x) in sorted([(county, count) for (i, county, count) in statedata[['Admin2', '4/5/20']].itertuples()], key = lambda x : x[1], reverse=True)]:
             f.write(gen_image_html(cname))            
-#            f.write('<div style="content"><hr>%s (2019 est population: %s)<br><img src="./images/%s.png"/></div>' % (cname, countypops[cname], cname))
 
     with open('./index-by-pop.html', 'w') as f:
         f.write('<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>')
         f.write('<h3><a href="./index.html">Alphabetical order</a> | <a href="./index-by-cases.html"> Order by # cases</a> | Order by county population')
         f.write(gen_jhu_html())
         f.write('<img src="./arcounties/images/AR.png"/>')
+        f.write('<img src="./arcounties/images/AR-deltas.png"/>')                
 
         #TODO much cleaner way to do this in pandas
         for cname in [c for (c,x) in sorted([(name, int(count.replace(',',''))) for (name, count) in countypops.items()], key = lambda x : x[1], reverse = True)]:
             f.write(gen_image_html(cname))
-#            f.write('<div style="content"><hr>%s (2019 est population: %s)<br><img src="./images/%s.png"/></div>' % (cname, countypops[cname], cname))
