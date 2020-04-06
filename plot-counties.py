@@ -28,6 +28,7 @@ def plotcounty(cname):
     y_pos = np.arange(len(plotdates))
     counts = list(statedata[statedata['Admin2'] == cname][plotdates].squeeze())
     m = max(statedata[dates[-1]]) # largest county count on most recent day
+    m = round(m*1.1)
     plt.ylim(0, m)
     plt.subplots_adjust(hspace=0, bottom=0.3)
     plt.plot(y_pos, counts)
