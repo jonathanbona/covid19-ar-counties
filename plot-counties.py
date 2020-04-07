@@ -117,6 +117,9 @@ def gen_state_images():
     return """<img src="./arcounties/images/AR.png"/>
               <img src="./arcounties/images/AR-deltas.png"/>"""
 
+def gen_county_links():
+    return '<br><hr>' + ' | '.join(['<a href="#%s">%s</a>' % (c.replace(' ', '_'), c) for c in list(statedata['Admin2'])])
+
 
 def gen_nav(nav = 'index'):
     if nav == 'index':
@@ -132,7 +135,8 @@ def write_index(counties):
         f.write(gen_nav('index'))
         f.write(gen_jhu_html())
         f.write(gen_state_images())
-
+        f.write(gen_county_links())
+        
         for cname in counties:
             f.write(gen_image_html(cname))
             
@@ -140,7 +144,8 @@ def write_index(counties):
         f.write(gen_head())
         f.write(gen_nav('case'))
         f.write(gen_jhu_html())
-        f.write(gen_state_images())        
+        f.write(gen_state_images())
+        f.write(gen_county_links())        
         
         #TODO much cleaner way to do this in pandas 
         for cname in [c for (c, x) in sorted([(county, count) for (i, county, count) in statedata[['Admin2', '4/5/20']].itertuples()], key = lambda x : x[1], reverse=True)]:
@@ -150,7 +155,8 @@ def write_index(counties):
         f.write(gen_head())
         f.write(gen_nav('pop'))
         f.write(gen_jhu_html())
-        f.write(gen_state_images())                
+        f.write(gen_state_images())
+        f.write(gen_county_links())        
 
         #TODO much cleaner way to do this in pandas
         for cname in [c for (c,x) in sorted([(name, int(count.replace(',',''))) for (name, count) in countypops.items()], key = lambda x : x[1], reverse = True)]:
