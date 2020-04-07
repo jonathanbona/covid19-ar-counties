@@ -85,6 +85,8 @@ def plotcounty2(cname):
     plt.savefig('./arcounties/images/%s-deltas.png'  % (cname))
     plt.clf()
 
+def gen_county_csv(cname):
+    statedata[statedata['Admin2'] == cname][plotdates].to_csv('./arcounties/%s.csv' % (cname.replace(' ', '_')), index = None)
     
 def plotall():
     plotstate()
@@ -92,6 +94,7 @@ def plotall():
     for c in list(statedata['Admin2']):
         plotcounty(c)
         plotcounty2(c)
+        gen_county_csv(c)
 
 
 def gen_jhu_html():
@@ -107,9 +110,10 @@ def gen_image_html(cname):
               <hr>
               %s (2019 est population: %s)
               <br>
+              <a href="./arcounties/%s.csv">%s County time series csv</a><br>
               <img src="./arcounties/images/%s.png"/>
               <img src="./arcounties/images/%s-deltas.png"/>
-              </div>""" % (cname.replace(' ', '_'), cname, countypops[cname], cname, cname)
+              </div>""" % (cname.replace(' ', '_'), cname, countypops[cname], cname.replace(' ', '_'), cname, cname, cname)
 def gen_head():
     return '<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>'
 
@@ -118,7 +122,7 @@ def gen_state_images():
               <img src="./arcounties/images/AR-deltas.png"/>"""
 
 def gen_county_links():
-    return '<br><hr>' + ' | '.join(['<a href="#%s">%s</a>' % (c.replace(' ', '_'), c) for c in list(statedata['Admin2'])])
+    return '<br><hr><div style="content">' + ' | '.join(['<a href="#%s">%s</a>' % (c.replace(' ', '_'), c) for c in list(statedata['Admin2'])]) + '</div>'
 
 
 def gen_nav(nav = 'index'):
