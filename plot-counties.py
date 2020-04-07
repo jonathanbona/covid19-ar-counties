@@ -45,7 +45,7 @@ def plotstate_deltas():
     plt.ylim(0, round(max(deltas)*1.1))
     plt.subplots_adjust(hspace=0, bottom=0.3)
     plt.bar(y_pos, deltas)
-    plt.title("State of Arkansas total")
+    plt.title("State of Arkansas daily change")
     plt.xticks(y_pos, plotdates, rotation=70)
     plt.savefig('./arcounties/images/AR-deltas.png')
     plt.clf()
@@ -115,7 +115,7 @@ def gen_head():
 
 def gen_state_images():
     return """<img src="./arcounties/images/AR.png"/>
-              <img src="./arcounties/images/AR-deltas.png"/>')"""
+              <img src="./arcounties/images/AR-deltas.png"/>"""
 
 
 def gen_nav(nav = 'index'):
