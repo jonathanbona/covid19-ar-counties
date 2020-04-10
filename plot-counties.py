@@ -108,12 +108,12 @@ def gen_jhu_html():
 def gen_image_html(cname):
     return """<div style="content" id="%s">
               <hr>
-              %s (2019 est population: %s)
+              %s - <b>%s</a> total cases</b> (2019 est population: %s)
               <br>
               <a href="./arcounties/%s.csv">%s County time series csv</a><br>
               <img src="./arcounties/images/%s.png"/>
               <img src="./arcounties/images/%s-deltas.png"/>
-              </div>""" % (cname.replace(' ', '_'), cname, countypops[cname], cname.replace(' ', '_'), cname, cname, cname)
+              </div>""" % (cname.replace(' ', '_'), cname, int(statedata[statedata['Admin2'] == cname][dates[-1]]),countypops[cname], cname.replace(' ', '_'), cname, cname, cname)
 def gen_head():
     return '<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>'
 
@@ -152,7 +152,7 @@ def write_index(counties):
         f.write(gen_county_links())        
         
         #TODO much cleaner way to do this in pandas 
-        for cname in [c for (c, x) in sorted([(county, count) for (i, county, count) in statedata[['Admin2', '4/5/20']].itertuples()], key = lambda x : x[1], reverse=True)]:
+        for cname in [c for (c, x) in sorted([(county, count) for (i, county, count) in statedata[['Admin2', dates[-1]]].itertuples()], key = lambda x : x[1], reverse=True)]:
             f.write(gen_image_html(cname))            
 
     with open('./index-by-pop.html', 'w') as f:
@@ -165,3 +165,8 @@ def write_index(counties):
         #TODO much cleaner way to do this in pandas
         for cname in [c for (c,x) in sorted([(name, int(count.replace(',',''))) for (name, count) in countypops.items()], key = lambda x : x[1], reverse = True)]:
             f.write(gen_image_html(cname))
+
+
+def run():
+    plotall()
+    write_index(list(statedata['Admin2']))
