@@ -7,7 +7,8 @@ from os import listdir
 countypops = {county.split('County,')[0].strip('. ') : count for (index, county, count) in pd.read_csv('./data/2019-county-estimates.csv').itertuples()}
     
 # JHU time series https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv
-covidts = 'data/time_series_covid19_confirmed_US.csv'
+#covidts = 'data/time_series_covid19_confirmed_US.csv'
+covidts = 'data/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv'
 covidtsx = pd.read_csv(covidts)
 
 
