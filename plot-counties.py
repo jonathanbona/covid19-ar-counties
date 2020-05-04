@@ -36,7 +36,7 @@ def plotstate():
     plt.plot(y_pos, counts)
     plt.title("State of Arkansas total")
     plt.xticks(y_pos, plotdates, rotation=70)
-    plt.savefig('./arcounties/images/AR.png')
+    plt.savefig('./arcounties/images/AR.svg')
     plt.clf()
 
 def plotstate_deltas():
@@ -48,7 +48,7 @@ def plotstate_deltas():
     plt.bar(y_pos, deltas)
     plt.title("State of Arkansas daily change")
     plt.xticks(y_pos, plotdates, rotation=70)
-    plt.savefig('./arcounties/images/AR-deltas.png')
+    plt.savefig('./arcounties/images/AR-deltas.svg')
     plt.clf()
     
 
@@ -71,7 +71,7 @@ def plotcounty(cname):
     plt.title("%s county total" % (cname))
     #plt.bar(y_pos, counts, align='center', alpha=0.5)
     plt.xticks(y_pos, plotdates, rotation=70)
-    plt.savefig('./arcounties/images/%s.png'  % (cname))
+    plt.savefig('./arcounties/images/%s.svg'  % (cname))
     plt.clf()
 
 def plotcounty2(cname):
@@ -83,7 +83,7 @@ def plotcounty2(cname):
     plt.bar(y_pos, deltas)
     plt.title("%s county daily change" % (cname))
     plt.xticks(y_pos, plotdates, rotation=70)
-    plt.savefig('./arcounties/images/%s-deltas.png'  % (cname))
+    plt.savefig('./arcounties/images/%s-deltas.svg'  % (cname))
     plt.clf()
 
 def gen_county_csv(cname):
@@ -112,15 +112,15 @@ def gen_image_html(cname):
               %s - <b>%s</a> total cases</b> (2019 est population: %s)
               <br>
               <a href="./arcounties/%s.csv">%s County time series csv</a><br>
-              <img src="./arcounties/images/%s.png"/>
-              <img src="./arcounties/images/%s-deltas.png"/>
+              <img src="./arcounties/images/%s.svg"/>
+              <img src="./arcounties/images/%s-deltas.svg"/>
               </div>""" % (cname.replace(' ', '_'), cname, int(statedata[statedata['Admin2'] == cname][dates[-1]]),countypops[cname], cname.replace(' ', '_'), cname, cname, cname)
 def gen_head():
     return '<html><head><link rel="stylesheet" href="arcounties/style.css"/></head>'
 
 def gen_state_images():
-    return """<img src="./arcounties/images/AR.png"/>
-              <img src="./arcounties/images/AR-deltas.png"/>"""
+    return """<img src="./arcounties/images/AR.svg"/>
+              <img src="./arcounties/images/AR-deltas.svg"/>"""
 
 def gen_county_links():
     return '<br><hr><div style="content">' + ' | '.join(['<a href="#%s">%s</a>' % (c.replace(' ', '_'), c) for c in list(statedata['Admin2'])]) + '</div>'
